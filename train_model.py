@@ -51,6 +51,15 @@ rmse = root_mean_squared_error(y_test, y_pred)
 
 print(f"CSV data read and used to train the model successfully.\nR^2: {score}\nMAE: {mae}\nRMSE: {rmse}\nExporting serialized model as a pkl file now.")
 
-joblib.dump(model, "model/model.pkl")
+# Create a python dictionary object to store for pkl serialization.
+data = {
+    "model": model,
+    "features": FEATURES,
+    "target": TARGET,
+    "mae": mae
+}
+
+# Serialize data to pkl.
+joblib.dump(data, "model/model.pkl")
 
 print("Model successfully dumped to model/model.pkl")
