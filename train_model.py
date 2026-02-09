@@ -13,11 +13,7 @@ FEATURES = [
     "bedrooms",
     "bathrooms",
     "sqft_lot",
-    "yr_built",
-    "grade",
-    "waterfront",
-    "view",
-    "yr_renovated"
+    "yr_built"
 ]
 
 # Set the TARGET we'd like the model to evaluate by and predict for.
