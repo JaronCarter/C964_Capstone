@@ -28,7 +28,7 @@ with col1:
     sqft_lot = st.number_input("Lot Area (sqft)", min_value=0, step=100)
 with col2:
     bedrooms = st.number_input("Bedrooms", min_value=0, step=1)
-    bathrooms = st.number_input("Bathrooms", min_value=0, step=1)
+    bathrooms = st.number_input("Bathrooms", min_value=0.0, step=0.5, format="%.1f")
 with col3:
     yr_built = st.number_input(
         "Enter the year built",
@@ -55,9 +55,18 @@ prediction = model.predict(input_df)[0]
 
 # Conditional check to make sure a valid prediction is available before showing the prediction and MAE esstimates on screen to the user.
 if prediction > 0:
-    st.html(f"<pre>Your home is estimated to be worth: <strong>${prediction:,.2f}  +-</strong>${mae:,.2f}</pre>")
+    st.markdown(
+        f"""
+    **Estimated Home Value:**  
+    ${prediction:,.2f}
+
+    **Estimated Error (MAE):**  
+    ± ${mae:,.2f}
+    """
+    )
+
 else:
-    st.html("<pre>Please enter in a few attributes that will help with prediction.</pre>")
+    st.markdown("_Please enter property attributes to generate an estimate._")
 
 # Optional expanding accordian for containing the charts and visuals.
 with st.expander("Explore Market Data"):
