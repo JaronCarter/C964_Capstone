@@ -1,3 +1,6 @@
+# Linear Regression Model Training Script for use with the King's County Housing District Data
+# Created by Jaron Carter
+
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
@@ -19,7 +22,7 @@ FEATURES = [
 # Set the TARGET we'd like the model to evaluate by and predict for.
 TARGET = "price"
 
-# Reselect the datafram data with only the features and target columns selected.
+# Reselect the dataframe data with only the features and target columns selected.
 df = df[FEATURES + [TARGET]]
 # Drop potential missing data rows from dataframe and reassign to dataframe variable.
 df = df.dropna()
