@@ -1,21 +1,28 @@
+from matplotlib.ticker import FuncFormatter
+import matplotlib.pyplot as plt
 import streamlit as st
 import joblib
 import datetime
 import pandas as pd
 
-bundle = joblib.load("model/model.pkl")
+# Set page layout to wide view by default.
+st.set_page_config(layout="wide")
 
+# Load pkl bundle and instantiate variables with the subsequent passed objects plus a datetime for UI year selection.
+bundle = joblib.load("model/model.pkl")
 model = bundle["model"]
 FEATURES = bundle["features"]
-TARGET = bundle["target"]
 mae = bundle["mae"]
 current_year = datetime.date.today().year
+
+# Read CSV data for comprehensive chart visuals.
+df = pd.read_csv("data/kc_house_data.csv")
 
 st.title("Home Price Estimator")
 st.write("Enter property details to estimate a home price.")
 
+# Create 3 columns for better UI layout. Add Number input boxes for each corresponding expected model field.
 col1, col2, col3 = st.columns(3)
-
 with col1:
     sqft_living = st.number_input("Living Area (sqft)", min_value=0, step=10)
     sqft_lot = st.number_input("Lot Area (sqft)", min_value=0, step=100)
@@ -31,6 +38,7 @@ with col3:
         step=1
     )
 
+# Initialize an array, matching model feature list order, that contains each input state.
 input_data = [
     sqft_living,
     bedrooms,
@@ -39,11 +47,63 @@ input_data = [
     yr_built
 ]
 
+# Create a dataframe using the user's input data and the model's expected feature columns.
 input_df = pd.DataFrame([input_data], columns=FEATURES)
 
+# Generate the prediction using the newly created user input dataframe. The predict method returns an array, so grab the first index for a more human readable output.
 prediction = model.predict(input_df)[0]
 
+# Conditional check to make sure a valid prediction is available before showing the prediction and MAE esstimates on screen to the user.
 if prediction > 0:
     st.html(f"<pre>Your home is estimated to be worth: <strong>${prediction:,.2f}  +-</strong>${mae:,.2f}</pre>")
 else:
     st.html("<pre>Please enter in a few attributes that will help with prediction.</pre>")
+
+# Optional expanding accordian for containing the charts and visuals.
+with st.expander("Explore Market Data"):
+
+    # Create a price by living sqft scatter plot view using a subplot, to keep from having shared axis', and set labels plus a formatter which takes a lambda expression for the yaxis indicators to be more legible.
+    st.subheader("Living Area vs Sale Price")
+    fig1, ax1 = plt.subplots(figsize=(8,3))
+    ax1.scatter(df["sqft_living"], df["price"],alpha=0.3)
+    ax1.set_xlabel("Living Area (sqft)")
+    ax1.set_ylabel("Price")
+    ax1.yaxis.set_major_formatter(
+        FuncFormatter(lambda y, _: f"${y/1000000:.0f}M")
+    )
+    st.pyplot(fig1)
+    plt.close(fig1)
+
+    # Create two columns for the remaining two charts to display neatly.
+    viz_col1, viz_col2 = st.columns(2)
+
+    with viz_col1:
+        st.subheader("Home Price Distribution")
+        
+        # Create a sales price histogram, set labels, and add a formatter lambda for the xaxis indicators to improve human readability.
+        fig2, ax2 = plt.subplots()
+        ax2.hist(df["price"], bins=500)
+        ax2.set_title("Distribution of Home Prices")
+        ax2.set_xlabel("Sale Price (USD)")
+        ax2.set_ylabel("Number of Homes Sold")
+        ax2.xaxis.set_major_formatter(
+            FuncFormatter(lambda x, _: f"${x/1_000_000:.0f}M")
+        )
+        st.pyplot(fig2)
+        plt.close(fig2)
+
+    with viz_col2:
+        st.subheader("Price by Bed Count")
+
+        # Create a price per bedrooms boxplot, set labels, and add a formatter lambda for the yaxis indicators to improve human readability.
+        fig3, ax3 = plt.subplots()
+        df.boxplot(column="price", by="bedrooms", ax=ax3)
+        ax3.set_xlabel("Number of Bedrooms")
+        ax3.set_ylabel("Sale Price (USD)")
+
+        ax3.yaxis.set_major_formatter(
+            FuncFormatter(lambda y, _: f"${y/1_000_000:.0f}M")
+        )
+
+        st.pyplot(fig3)
+        plt.close(fig3)
