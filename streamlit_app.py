@@ -46,13 +46,12 @@ st.caption(
     "based on patterns learned from the King County dataset."
 )
 
-
-
 # Split UI into two main views.
 left_col, right_col = st.columns([8, 7])
 
-# Left view for Machine Learning Predictor Input and Output layer.
-with left_col:
+# Isolate the input and prediction UI into a Streamlit fragment function to prevent unnecessary rerenders of components outside of the fragment scope.
+@st.fragment
+def input_section():
     st.subheader("Property Details")
     st.write("Enter property details to estimate a home price.")
 
@@ -108,6 +107,10 @@ with left_col:
     else:
         st.markdown("_Please enter property attributes to generate an estimate._")
 
+# Left view for Machine Learning Predictor Input and Output layer.
+with left_col:
+    input_section()
+
 # Right side view for containing charts and visuals of main data.
 with right_col:
     st.subheader("Data Representation Views")
@@ -153,7 +156,6 @@ with right_col:
         ax3.yaxis.set_major_formatter(
             FuncFormatter(lambda y, _: f"${y/1_000_000:.0f}M")
         )
-
         st.pyplot(fig3)
         plt.close(fig3)
         
