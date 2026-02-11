@@ -8,6 +8,14 @@ import joblib
 import datetime
 import pandas as pd
 
+# Define cached loaders for the model and dataset to improve performance during reactive rerenders.
+@st.cache_resource
+def load_model():
+    return joblib.load("model/model.pkl")
+@st.cache_data
+def load_dataset():
+    return pd.read_csv("data/kc_house_data.csv")
+
 # Set page layout to wide view by default. Add markdown to reduce default Streamlit vertical padding.
 st.set_page_config(layout="wide")
 st.markdown(
@@ -22,16 +30,15 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-
 # Load pkl bundle and instantiate variables with the subsequent passed objects plus a datetime for UI year selection.
-bundle = joblib.load("model/model.pkl")
+bundle = load_model()
 model = bundle["model"]
 FEATURES = bundle["features"]
 mae = bundle["mae"]
 current_year = datetime.date.today().year
 
 # Read CSV data for comprehensive chart visuals.
-df = pd.read_csv("data/kc_house_data.csv")
+df = load_dataset()
 
 st.title("Home Price Estimator")
 st.caption(
@@ -54,7 +61,7 @@ with left_col:
 
     with col1:
         sqft_living = st.number_input("Living Area (sqft)", min_value=0, step=10)
-        sqft_lot = st.number_input("Lot Area (sqft)", min_value=0, step=100)
+        sqft_lot = st.number_input("Lot Area (sqft)", min_value=sqft_living, step=100)
         yr_built = st.number_input(
             "Year Built",
             min_value=1900,
