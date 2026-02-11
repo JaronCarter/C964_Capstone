@@ -34,9 +34,15 @@ current_year = datetime.date.today().year
 df = pd.read_csv("data/kc_house_data.csv")
 
 st.title("Home Price Estimator")
+st.caption(
+    "This application uses a custom-trained machine learning model to generate predictions "
+    "based on patterns learned from the King County dataset."
+)
+
+
 
 # Split UI into two main views.
-left_col, right_col = st.columns([7, 8])
+left_col, right_col = st.columns([8, 7])
 
 # Left view for Machine Learning Predictor Input and Output layer.
 with left_col:
@@ -143,3 +149,5 @@ with right_col:
 
         st.pyplot(fig3)
         plt.close(fig3)
+        
+st.caption("— Created by Jaron Carter")

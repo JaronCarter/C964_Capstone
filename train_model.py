@@ -1,4 +1,4 @@
-# Linear Regression Model Training Script for use with the King's County Housing District Data
+# Linear Regression Model Training Script for use with the King County Housing Data
 # Created by Jaron Carter
 
 import pandas as pd
