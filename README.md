@@ -65,7 +65,8 @@ No installation is required for hosted use.
 
 To run the application locally:
 
-1. Clone the repository:
+1. Ensure Python 3.10 or newer and git are installed and accessible from the command line.
+2. Clone the repository:
 
     ```
    git clone https://github.com/JaronCarter/C964_Capstone.git
@@ -142,4 +143,5 @@ MAE is displayed within the application to provide transparency regarding predic
 Jaron Carter  
 Computer Science – WGU  
 Software Engineer and Project Lead  
+
 
