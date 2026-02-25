@@ -67,19 +67,25 @@ To run the application locally:
 
 1. Clone the repository:
 
-    git clone https://github.com/JaronCarter/C964_Capstone.git
+    ```
+   git clone https://github.com/JaronCarter/C964_Capstone.git
+    ```
 
-2. Navigate into the project directory.
+3. Navigate into the project directory.
 
-3. Install dependencies:
+4. Install dependencies:
 
-    pip install -r requirements.txt
+    ```
+   pip install -r requirements.txt
+    ```
 
-4. Launch the application:
+5. Launch the application:
 
-    streamlit run streamlit_app.py
+    ```
+   streamlit run streamlit_app.py
+    ```
 
-5. Open the provided local URL in a web browser (typically http://localhost:8501).
+6. Open the provided local URL in a web browser (typically http://localhost:8501).
 
 ---
 
@@ -136,3 +142,4 @@ MAE is displayed within the application to provide transparency regarding predic
 Jaron Carter  
 Computer Science – WGU  
 Software Engineer and Project Lead  
+
